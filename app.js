@@ -4,11 +4,17 @@ const ROCK = 'ROCK';
 const PAPER = 'PAPER';
 const SCISSORS = 'SCISSORS';
 const DEFAULT_USER_CHOICE = ROCK;
+const RESULT_DRAW = 'DRAW';
+const RESULT_PLAYER_WINS = 'PLAYER_WINS';
+const RESULT_COMPUTER_WINS = 'COMPUTER_WINS';
 
 let gameIsRunning = false;
 
-const getPlayerChoice = function() {
-	const selection = prompt(`${ROCK}, ${PAPER} or ${SCISSORS}?`, '').toUpperCase();
+const getPlayerChoice = () => {
+	const selection = prompt(
+	`${ROCK}, ${PAPER} or ${SCISSORS}?`,
+	''
+	).toUpperCase();
 	if (
 		selection !== ROCK &&
 		selection !== PAPER &&
@@ -20,9 +26,7 @@ const getPlayerChoice = function() {
 	return selection;
 };
 
-
-
-const getComputerChoce = function () {
+const getComputerChoce = () => {
 	const randomValue = Math.random();
 	if (randomValue < 0.33) {
 		return ROCK;
@@ -33,13 +37,50 @@ const getComputerChoce = function () {
 	}
 };
 
-startGameBtn.addEventListener('click', function() {
+const getWinner = (cChoice, pChoice) =>
+	cChoice === pChoice 
+		? RESULT_DRAW : cChoice === ROCK && pChoice === PAPER || 
+		cChoice === PAPER && pChoice === SCISSORS ||
+		cChoice === SCISSORS && pChoice === ROCK 
+		? RESULT_PLAYER_WINS 
+		: RESULT_COMPUTER_WINS;
+	
+	/*if (cChoice === pChoice) {
+		return RESULT_DRAW;
+	} else if (
+		cChoice === ROCK && pChoice === PAPER || 
+		cChoice === PAPER && pChoice === SCISSORS ||
+		cChoice === SCISSORS && pChoice === ROCK
+	) {
+		return RESULT_PLAYER_WINS;
+	} else {
+		return RESULT_COMPUTER_WINS;
+	}*/
+
+startGameBtn.addEventListener('click', () => {
 	if (gameIsRunning) {
 		return;
 	}
 	gameIsRunning = true;
 	console.log('Game is starting...');
-	const playerSelection = getPlayerChoice();
-	console.log(playerSelection);
+	const playerChoice = getPlayerChoice();
 	const computerChoice = getComputerChoce();
+	const winner = getWinner(computerChoice, playerChoice);
+	let message = `You picked ${playerChoice}, computer picked ${computerChoice}, therefore you `;;
+	if (winner === RESULT_DRAW) {
+		message = message + 'had a draw!';
+	} else if (winner === RESULT_PLAYER_WINS) {
+		message = message + 'won the game!';
+	} else {
+		message = message + 'lost!';
+	}
+	alert(message);
+	gameIsRunning = false;
 });
+
+
+
+
+
+
+
